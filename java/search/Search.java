@@ -147,12 +147,27 @@ public class Search{
 	// Main
 	public static void main(String[] args){
 		try {
+			if (args.length < 3) {
+				System.out.println("Usage: java search.Search <startStation> <goalStation> <city> <algorithm>");
+				return;
+			}
+
 			System.out.println("Search Program is Running...");
 
-            String city = "boston";
-            String algorithm = "bfs";
-            String startStationName = "Fenway";
-            String goalStationName = "South Station";
+			String startStationName = args[0];
+			String goalStationName = args[1];
+
+			String city = args[2];
+			if (!city.equals("Boston") && !city.equals("London")) {
+				System.out.println("Invalid city. Please use 'Boston' or 'London'");
+				return;
+			}
+
+			String algorithm = args[3];
+			if (!algorithm.equals("bfs") && !algorithm.equals("dfs") && !algorithm.equals("ucs") && !algorithm.equals("astar")) {
+				System.out.println("Invalid algorithm. Please use one of: bfs, dfs, ucs, astar");
+				return;
+			}
 
 			System.out.println("City: " + city);
             System.out.println("Algorithm: " + algorithm);
@@ -161,8 +176,14 @@ public class Search{
             // Load correct subway map
             SubwayMap map;
 
-			System.out.println("Loading Boston subway map...");
-            map = SubwayMap.buildBostonMap();
+			System.out.println("Loading Subway map...");
+			if (city.equals("Boston"))
+            	map = SubwayMap.buildBostonMap();
+			else if (city.equals("London"))
+				map = SubwayMap.buildLondonMap();
+			else
+				map = null;
+
 			System.out.println("Subway map loaded. Total Stations: " + map.numStations());
 
             // Get start and goal stations
@@ -172,8 +193,14 @@ public class Search{
             // Create the Subway Navigation Problem
             SubNavProblem problem = new SubNavProblem(map, startStation, goalStation);
             
-            breadthFirstSearch(problem);
-            
+			if (algorithm.equals("bfs"))
+				breadthFirstSearch(problem);
+			else if (algorithm.equals("dfs"))
+				depthFirstSearch(problem);
+			else if (algorithm.equals("ucs"))
+				uniformCostSearch(problem);
+			else if (algorithm.equals("astar"))
+				aStarSearch(problem);
 
         } 
 		catch (Exception e) 
