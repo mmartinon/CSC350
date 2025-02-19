@@ -1,5 +1,10 @@
 package search;
 
+import java.util.ArrayList;
+
+import subway.Station;
+import subway.SubwayMap;
+
 /**
 This code is adapted from search.py in the AIMA Python implementation, which is published with the license below:
 
@@ -45,9 +50,47 @@ public class Search{
 	
 	// Main
 	public static void main(String[] args){
-		//Replace this code with code that runs the program specified by
-		//the command arguments
-		
-		System.out.println(args[0]);
+		try {
+            System.out.println("Starting Subway Navigation Test...");
+
+            // Load a subway map (Boston or London)
+            SubwayMap map = SubwayMap.buildBostonMap(); 
+            System.out.println("Subway map loaded successfully.");
+            System.out.println("Number of stations: " + map.numStations());
+
+            // Choose a test station
+            String startStationName = "Fenway";  
+            String goalStationName = "South Station"; 
+
+            Station startStation = map.getStationByName(startStationName);
+            Station goalStation = map.getStationByName(goalStationName);
+
+            if (startStation == null || goalStation == null) {
+                System.out.println("Error: One or both stations do not exist. Please check station names.");
+                return;
+            }
+
+            // Create a SubNavProblem instance
+            SubNavProblem problem = new SubNavProblem(map, startStation, goalStation);
+            System.out.println("Problem initialized with start station: " + startStation.name);
+
+            // Print initial state
+            System.out.println("Initial State: " + problem.getInitial());
+
+            // Get successors of the initial state
+            ArrayList<Tuple> successors = problem.successor(problem.getInitial());
+
+            // Print successors
+            System.out.println("Successors of " + startStation.name + ":");
+            for (Tuple successor : successors) {
+                System.out.println(successor);
+            }
+
+            System.out.println("SubNavProblem test completed successfully.");
+
+        } catch (Exception e) {
+            System.err.println("An error occurred during execution:");
+            e.printStackTrace();
+        }
 	}
 }
