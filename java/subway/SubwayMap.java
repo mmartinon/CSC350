@@ -174,8 +174,8 @@ public class SubwayMap{
 	@return A SubwayMap object containing the London Underground data
 	*/
 	public static SubwayMap buildLondonMap() throws FileNotFoundException {
-		File stationFile = new File("../data/london_stations.csv");
-		File linkFile = new File("../data/london_links.csv");
+		File stationFile = new File("data/london_stations.csv");
+		File linkFile = new File("data/london_links.csv");
 		
 		return buildMap(stationFile, linkFile);	
 	}	
