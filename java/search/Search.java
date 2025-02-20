@@ -154,20 +154,22 @@ public class Search{
 
 			System.out.println("Search Program is Running...");
 
-			String startStationName = args[0];
-			String goalStationName = args[1];
+			
 
-			String city = args[2];
+			String city = args[0];
 			if (!city.equals("Boston") && !city.equals("London")) {
 				System.out.println("Invalid city. Please use 'Boston' or 'London'");
 				return;
 			}
 
-			String algorithm = args[3];
+			String algorithm = args[1];
 			if (!algorithm.equals("bfs") && !algorithm.equals("dfs") && !algorithm.equals("ucs") && !algorithm.equals("astar")) {
 				System.out.println("Invalid algorithm. Please use one of: bfs, dfs, ucs, astar");
 				return;
 			}
+
+			String startStationName = args[2];
+			String goalStationName = args[3];
 
 			System.out.println("City: " + city);
             System.out.println("Algorithm: " + algorithm);
