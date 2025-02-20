@@ -147,7 +147,7 @@ public class Search{
 	// Main
 	public static void main(String[] args){
 		try {
-			if (args.length < 3) {
+			if (args.length < 4) {
 				System.out.println("Usage: java search.Search <startStation> <goalStation> <city> <algorithm>");
 				return;
 			}
@@ -170,10 +170,21 @@ public class Search{
 
 			String startStationName = args[2];
 			String goalStationName = args[3];
+			double distance = 0.0;
+
+			if (args.length == 5) {
+                try {
+                    distance = Double.parseDouble(args[4]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid distance. Please provide a valid number.");
+                    return;
+                }
+            }
 
 			System.out.println("City: " + city);
             System.out.println("Algorithm: " + algorithm);
             System.out.println("Start: " + startStationName + " -> Goal: " + goalStationName);
+			System.out.println("Distance: " + distance);
 
             // Load correct subway map
             SubwayMap map;
@@ -194,7 +205,12 @@ public class Search{
 
             // Create the Subway Navigation Problem
             SubNavProblem problem = new SubNavProblem(map, startStation, goalStation);
-            
+            if (distance > 0) {
+                problem = new SubNavProblem(map, startStation, goalStation, distance);
+            } else {
+                problem = new SubNavProblem(map, startStation, goalStation);
+            }
+
 			if (algorithm.equals("bfs"))
 				breadthFirstSearch(problem);
 			else if (algorithm.equals("dfs"))

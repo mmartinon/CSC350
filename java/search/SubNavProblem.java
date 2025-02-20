@@ -7,6 +7,7 @@ public class SubNavProblem extends Problem {
     private SubwayMap map;
     private Station startStation;
     private Station goalStation;
+    private double distance;
 
     /**
      * Constructor to initialize the subway navigation problem.
@@ -19,7 +20,26 @@ public class SubNavProblem extends Problem {
         this.map = map;
         this.startStation = startStation;
         this.goalStation = goalStation;
+        this.distance = 0.0;
     }
+
+    /**
+     * Constructor to initialize the subway navigation problem.
+     * @param map The subway map containing all stations and links.
+     * @param startStation The starting station in the problem.
+     * @param goalStation The goal station in the problem.
+     * @param distance distance in kilometers to consider as goal.
+     */
+    public SubNavProblem(SubwayMap map, Station startStation, Station goalStation, double distance) {
+        super(new State(startStation.name), new State(goalStation.name));
+        this.map = map;
+        this.startStation = startStation;
+        this.goalStation = goalStation;
+        this.distance = distance;
+    }
+
+
+    
 
     /**
      * Returns the initial state of the problem.
@@ -88,5 +108,19 @@ public class SubNavProblem extends Problem {
         }
         return pathCost; 
     }    
+
+    /**
+     * Tests whether the given state is a goal state.
+     * @param state The state to test.
+     * @return True if the state is a goal state, false otherwise.
+     */
+    @Override
+    public boolean goalTest(State state) {
+        Station currentStation = map.getStationByName(state.getName());
+        Station goalStation = map.getStationByName(this.goalStation.name);
+
+        // Check if the current station is within the distance d of the goal station
+        return currentStation.equals(goalStation) || SubwayMap.straightLineDistance(currentStation, goalStation) <= distance;
+    }
     
 }
