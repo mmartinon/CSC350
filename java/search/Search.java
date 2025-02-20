@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.PriorityQueue;
 
 import subway.Station;
 import subway.SubwayMap;
@@ -132,10 +133,52 @@ public class Search{
 		return null;
 	}
 	
-	public static Node uniformCostSearch(Problem problem){
-		//YOUR CODE HERE
-		return null;
+	public static Node uniformCostSearch(Problem problem) {
+		System.out.println("UCS loading");
+		PriorityQueue<Node> frontier = new PriorityQueue<>((a, b) -> Double.compare(a.getPathCost(), b.getPathCost()));
+		HashSet<State> visited = new HashSet<>();
+	
+		// Start with the initial node
+		Node startNode = new Node(problem.getInitial());
+		frontier.add(startNode);
+	
+		int nodesVisited = 0; // Counter for visited nodes
+		
+		while (!frontier.isEmpty()) {
+			Node currentNode = frontier.poll(); // Get node with the lowest cost
+			nodesVisited++;
+	
+			// Goal test
+			if (problem.goalTest(currentNode.getState())) {
+				System.out.println("Solution Found!");
+				System.out.println("Total Path Cost: " + currentNode.getPathCost());
+				System.out.println("Total Nodes Visited: " + nodesVisited);
+	
+				// Print path inline
+				System.out.print("Solution Path: ");
+				ArrayList<Node> path = currentNode.path();
+				for (Node node : path) {
+					System.out.print(node.getState().getName() + " -> ");
+				}
+				System.out.println();
+				return currentNode;
+			}
+	
+			// Mark the node as visited
+			visited.add(currentNode.getState());
+	
+			// Expand node and add unvisited successors
+			for (Node child : currentNode.expand(problem)) {
+				if (!visited.contains(child.getState())) {
+					frontier.add(child);
+				}
+			}
+		}
+	
+		System.out.println("No solution found.");
+		return null; 
 	}
+	
 
 	// Informed (Heuristic) Search
 	
