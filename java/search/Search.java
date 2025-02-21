@@ -110,7 +110,7 @@ public class Search{
                 ArrayList<Node> path = currentNode.path();
                 for (Node node : path) 
 				{
-                    System.out.print(node.getState().getName() + " ");
+                    System.out.print(node.getState().getName() + " -> ");
                 }
                 System.out.println(); // Move to next line
                 return currentNode;
