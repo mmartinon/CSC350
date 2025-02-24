@@ -229,69 +229,80 @@ public class Search{
 	// Main
 	public static void main(String[] args){
 		try {
-			if (args.length < 4) {
-				System.out.println("Usage: java search.Search <startStation> <goalStation> <city> <algorithm>");
-				return;
-			}
+			
 
 			System.out.println("Search Program is Running...");
 
-			
-
-			String city = args[0];
-			if (!city.equals("Boston") && !city.equals("London")) {
-				System.out.println("Invalid city. Please use 'Boston' or 'London'");
-				return;
-			}
-
+			String problemType = args[0];
 			String algorithm = args[1];
 			if (!algorithm.equals("bfs") && !algorithm.equals("dfs") && !algorithm.equals("ucs") && !algorithm.equals("astar")) {
 				System.out.println("Invalid algorithm. Please use one of: bfs, dfs, ucs, astar");
 				return;
 			}
+			Problem problem = null;
 
-			String startStationName = args[2];
-			String goalStationName = args[3];
-			double distance = 0.0;
-
-			if (args.length == 5) {
-                try {
-                    distance = Double.parseDouble(args[4]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid distance. Please provide a valid number.");
+			if (problemType.equals("eight")) {
+                if (args.length < 3) {
+                    System.out.println("Usage: java search.Search eight <algorithm> <initialState>");
                     return;
                 }
-            }
-
-			System.out.println("City: " + city);
-            System.out.println("Algorithm: " + algorithm);
-            System.out.println("Start: " + startStationName + " -> Goal: " + goalStationName);
-			System.out.println("Distance: " + distance);
-
-            // Load correct subway map
-            SubwayMap map;
-
-			System.out.println("Loading Subway map...");
-			if (city.equals("Boston"))
-            	map = SubwayMap.buildBostonMap();
-			else if (city.equals("London"))
-				map = SubwayMap.buildLondonMap();
-			else
-				map = null;
-
-			System.out.println("Subway map loaded. Total Stations: " + map.numStations());
-
-            // Get start and goal stations
-            Station startStation = map.getStationByName(startStationName);
-            Station goalStation = map.getStationByName(goalStationName);
-
-            // Create the Subway Navigation Problem
-            SubNavProblem problem = new SubNavProblem(map, startStation, goalStation);
-            if (distance > 0) {
-                problem = new SubNavProblem(map, startStation, goalStation, distance);
+                String initialStateStr = args[2];
+                int[] initialState = new int[9];
+                for (int i = 0; i < 9; i++) {
+                    initialState[i] = Character.getNumericValue(initialStateStr.charAt(i));
+                }
+                int[] goalState = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+                problem = new PuzzleProblem(initialState, goalState);
             } else {
-                problem = new SubNavProblem(map, startStation, goalStation);
-            }
+				String city = args[0];
+				if (!city.equals("Boston") && !city.equals("London")) {
+					System.out.println("Invalid city. Please use 'Boston' or 'London'");
+					return;
+				}
+
+				String startStationName = args[2];
+				String goalStationName = args[3];
+				double distance = 0.0;
+
+				if (args.length == 5) {
+                	try {
+                	    distance = Double.parseDouble(args[4]);
+                	} catch (NumberFormatException e) {
+                	    System.out.println("Invalid distance. Please provide a valid number.");
+                	    return;
+                	}
+           		}
+
+				System.out.println("City: " + city);
+				System.out.println("Algorithm: " + algorithm);
+				System.out.println("Start: " + startStationName + " -> Goal: " + goalStationName);
+				System.out.println("Distance: " + distance);
+
+				// Load correct subway map
+				SubwayMap map;
+
+				System.out.println("Loading Subway map...");
+				if (city.equals("Boston"))
+					map = SubwayMap.buildBostonMap();
+				else if (city.equals("London"))
+					map = SubwayMap.buildLondonMap();
+				else
+					map = null;
+
+				System.out.println("Subway map loaded. Total Stations: " + map.numStations());
+
+				// Get start and goal stations
+				Station startStation = map.getStationByName(startStationName);
+				Station goalStation = map.getStationByName(goalStationName);
+
+				// Create the Subway Navigation Problem
+				//SubNavProblem problem = new SubNavProblem(map, startStation, goalStation);
+				if (distance > 0) {
+					problem = new SubNavProblem(map, startStation, goalStation, distance);
+				} else {
+					problem = new SubNavProblem(map, startStation, goalStation);
+				}
+			}
 
 			if (algorithm.equals("bfs"))
 				breadthFirstSearch(problem);
