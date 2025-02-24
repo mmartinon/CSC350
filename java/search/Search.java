@@ -183,7 +183,46 @@ public class Search{
 	// Informed (Heuristic) Search
 	
 	public static Node aStarSearch(Problem problem){
-		//YOUR CODE HERE
+		System.out.println("A* Loading");
+		PriorityQueue<Node> frontier = new PriorityQueue<>((a, b) -> Double.compare(a.getPathCost() + problem.h(a), b.getPathCost() + problem.h(b)));
+		HashSet<State> explored = new HashSet<>();
+
+		// Start with the initial node
+		Node startNode = new Node(problem.getInitial());
+		frontier.add(startNode);
+		int nodesVisited = 0; // Counter for visited nodes
+
+		while(!frontier.isEmpty())
+		{
+			Node currentNode = frontier.poll();
+			frontier.remove(currentNode);
+			nodesVisited++;
+
+			if(problem.goalTest(currentNode.getState()))
+			{
+				System.out.println("Path found!");
+				System.out.println("Total Path Cost: " + currentNode.getPathCost());
+				System.out.println("Nodes Visited: " + nodesVisited);
+	
+				System.out.print("Solution Path: ");
+				ArrayList<Node> path = currentNode.path();
+				for (Node node : path) {
+					System.out.print(node.getState().getName() + " -> ");
+				}
+				System.out.println();
+				return currentNode;
+			}
+
+			explored.add(currentNode.getState());
+
+			for (Node child : currentNode.expand(problem)) {
+				if (!explored.contains(child.getState())) {
+					frontier.add(child);
+				}
+			}
+		}
+
+		System.out.println("No solution found.");
 		return null;
 	}
 	

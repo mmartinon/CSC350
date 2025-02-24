@@ -122,5 +122,13 @@ public class SubNavProblem extends Problem {
         // Check if the current station is within the distance d of the goal station
         return currentStation.equals(goalStation) || SubwayMap.straightLineDistance(currentStation, goalStation) <= distance;
     }
+
+    @Override
+    public double h(Node node)
+    {
+        Station currentStation = map.getStationByName(node.getState().getName());
+
+        return currentStation.straightLineDistance(goalStation);
+    }
     
 }
