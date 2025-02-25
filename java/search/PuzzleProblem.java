@@ -48,8 +48,9 @@ public class PuzzleProblem extends Problem{
         return pathCost + 1; // Each move has a cost of 1
     }
 
-    public double heuristic(State state) {
-        int[] currentState = ((PuzzleState) state).getValue();
+    @Override
+    public double h(Node node) {
+        int[] currentState = ((PuzzleState) node.getState()).getValue();
         int distance = 0;
         for (int i = 0; i < currentState.length; i++) {
             if (currentState[i] != 0) {
